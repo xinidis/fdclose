@@ -13,9 +13,9 @@ int main(int argc, char **argv){
         struct ptrace_do *target;
 
         if(argc != 3) {
-                fprintf(stderr, "usage: %1$s <PID> <FD>\n"
+                fprintf(stderr, "usage: %s <PID> <FD>\n"
                         " e.g.: close file descriptor 3 from pid 1000 => "
-                        "%1$s 1000 3\n", program_invocation_short_name);
+                        "%s 1000 3\n", program_invocation_short_name, program_invocation_short_name);
                 exit(-1);
         }
 

@@ -4,7 +4,7 @@ prefix = $(DESTDIR)/usr/local/bin
 CC = gcc
 CFLAGS = -std=gnu99 -Wextra -pedantic -O3
 
-.PHONY: all libptrace_do.a fdclose install uninstall clean
+.PHONY: all install uninstall clean
 all: $(NAMESPACE)
 
 $(NAMESPACE): libptrace_do.a
@@ -23,9 +23,8 @@ uninstall:
 	rm -rf $(prefix)/$(NAMESPACE)
 
 clean:
-	cd $(CURDIR)/src/ptrace_do && $(MAKE) $@ clean || true
-	rm -f $(CURDIR)/bin/$(NAMESPACE)
-
+	@$(MAKE) -C $(CURDIR)/src/ptrace_do clean || true
+	@rm -f $(CURDIR)/bin/$(NAMESPACE)
 
 #
 # tests (in a container)
@@ -36,7 +35,7 @@ DOCKER_SOCKET ?= /var/run/docker.sock
 DOCKER_GROUP_ID ?= $(shell ls -ln $(DOCKER_SOCKET) | awk '{print $$4}')
 
 # for docker-for-mac, we also add group-id of 50 ("authedusers") as moby distro seems to auto bind-mount /var/run/docker.sock w/ this ownership
-DOCKER_FOR_MAC_WORKAROUND := $(shell [[ "$$OSTYPE" == darwin* || "$$OSTYPE" == macos* ]] && echo "--group-add=50")
+DOCKER_FOR_MAC_WORKAROUND := $(shell uname | grep -qi darwin && echo "--group-add=50")
 
 clean-tests: clean
 	rm -rf $(CURDIR)/tests/bats/tmp

@@ -15,5 +15,5 @@ libptrace_do.a: libptrace_do.c libptrace_do.h parse_maps.c
 test: test.c
 	$(CC) $(CFLAGS) -L. -o test test.c -lptrace_do
 
-clean: 
-	rm libptrace_do.o libptrace_do.a parse_maps.o test
+clean:
+	rm -f libptrace_do.o libptrace_do.a parse_maps.o test

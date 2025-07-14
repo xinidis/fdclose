@@ -30,7 +30,7 @@ struct parse_maps *get_proc_pid_maps(pid_t target){
 
 	struct parse_maps *map_head = NULL, *map_tail = NULL, *map_tmp;
 
-	int fd, buffer_len;
+	int fd = -1, buffer_len;
 	int ret_int;
 
 	char *buffer;
@@ -105,7 +105,9 @@ struct parse_maps *get_proc_pid_maps(pid_t target){
 CLEAN_UP:
 
 	free(buffer);
-	close(fd);
+	if (fd > 0) {
+		close(fd);
+	}
 	free_parse_maps_list(map_head);
 	return(NULL);
 }
@@ -219,7 +221,7 @@ struct parse_maps *parse_next_line(char *line){
 	token_head = token_tail + 1;
 	if(*token_head){
 		if((token_head = strrchr(token_head, ' ')) == NULL){
-			fprintf(stderr, "strrchr(%s, '%c'): %s\n", token_head, ' ', strerror(errno));
+			fprintf(stderr, "strrchr(): %s\n", strerror(errno));
 			goto CLEAN_UP;
 		}
 		token_head++;
